@@ -1,16 +1,16 @@
 {
-	"include": ["Y*/**/*.ts", "run.ts"],
-	"compilerOptions": {
-		"target": "es2020",
-		"outDir": "./dist",
-		"moduleResolution": "node",
-		"types": ["@types/node"],
-		"noEmit": true,
-		"module": "commonjs",
-		"esModuleInterop": true,
-		"forceConsistentCasingInFileNames": true,
-		"strict": true,
-		"skipLibCheck": true,
-		"resolveJsonModule": true
-	}
+  "include": ["Y*/**/*.ts", "run.ts"],
+  "compilerOptions": {
+    "target": "es2020",
+    "outDir": "./dist",
+    "moduleResolution": "node",
+    "types": ["@types/node"],
+    "noEmit": true,
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true
+  }
 }
