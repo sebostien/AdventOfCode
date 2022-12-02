@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-var-requires */
 import path from 'path';
 import fs from 'fs';
 
@@ -80,7 +83,7 @@ if (options['--test-all']) {
       }
 
       if (yearDone) {
-        console.log(`Year ${year}: all done!`);
+        console.log(`Year ${year[1]}: all done!`);
       }
     }
   }
@@ -90,7 +93,7 @@ if (options['--test-all']) {
     process.exit(1);
   }
 
-  let [year, day] = params;
+  const [year, day] = params;
   if (isNaN(+year) || isNaN(+day)) {
     console.error('Please provide year and day as numbers');
     process.exit(1);
