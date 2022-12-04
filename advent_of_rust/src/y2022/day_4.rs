@@ -1,4 +1,6 @@
-fn parse_row(row: &str) -> ((i32, i32), (i32, i32)) {
+type Range = (i32, i32);
+
+fn parse_row(row: &str) -> (Range, Range) {
     let mut pairs = row.split(',');
     let mut a = pairs.next().unwrap().split("-");
     let mut b = pairs.next().unwrap().split("-");
@@ -15,7 +17,7 @@ fn parse_row(row: &str) -> ((i32, i32), (i32, i32)) {
     );
 }
 
-fn contained(a: (i32, i32), b: (i32, i32)) -> bool {
+fn contained(a: Range, b: Range) -> bool {
     a.0 <= b.0 && a.1 >= b.1
 }
 
@@ -33,7 +35,7 @@ fn part_1(input: String) -> usize {
     sum
 }
 
-fn intersects(a: (i32, i32), b: (i32, i32)) -> bool {
+fn intersects(a: Range, b: Range) -> bool {
     b.0 <= a.1 && b.1 >= a.0
 }
 
