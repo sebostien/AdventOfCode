@@ -1,4 +1,7 @@
 #![allow(dead_code)]
+#![feature(test)]
+
+extern crate test;
 
 mod util;
 mod y2022;

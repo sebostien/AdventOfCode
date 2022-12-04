@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 fn priority(c: char) -> usize {
     if c.is_uppercase() {
         c as usize - 38
@@ -14,7 +12,7 @@ fn part_1(input: String) -> usize {
     for line in input.trim().lines() {
         let chars = line.trim().chars();
         let middle = line.trim().len() / 2;
-        let right: HashSet<char> = chars.clone().skip(middle).collect();
+        let right: Vec<char> = chars.clone().skip(middle).collect();
         for c in chars.take(middle) {
             if right.contains(&c) {
                 sum += priority(c);
@@ -32,16 +30,14 @@ fn part_2(input: String) -> usize {
     let sacks = input
         .trim()
         .lines()
-        .map(|s| s.trim().chars().collect::<HashSet<_>>())
+        .map(|s| s.trim().chars().collect::<Vec<_>>())
         .collect::<Vec<_>>();
 
-    for (i, sack) in sacks.iter().enumerate() {
-        if i % 3 == 0 {
-            for c in sack.iter() {
-                if sacks[i + 1].contains(c) && sacks[i + 2].contains(c) {
-                    sum += priority(*c);
-                    break;
-                }
+    for (i, sack) in sacks.iter().enumerate().step_by(3) {
+        for c in sack.iter() {
+            if sacks[i + 1].contains(c) && sacks[i + 2].contains(c) {
+                sum += priority(*c);
+                break;
             }
         }
     }
