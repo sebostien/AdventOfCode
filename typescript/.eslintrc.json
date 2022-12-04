@@ -2,14 +2,9 @@
   "root": true,
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": [
-      "./tsconfig.json",
-      ".eslintrc.js"
-    ]
+    "project": ["./tsconfig.json", ".eslintrc.js"]
   },
-  "plugins": [
-    "@typescript-eslint"
-  ],
+  "plugins": ["@typescript-eslint"],
   "env": {
     "node": true,
     "es6": true
@@ -20,30 +15,13 @@
     "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
   "rules": {
-    "comma-dangle": [
-      "error",
-      "always-multiline"
-    ],
-    "semi-style": [
-      "error",
-      "last"
-    ],
-    "semi": [
-      "error",
-      "always"
-    ],
+    "comma-dangle": ["error", "always-multiline"],
+    "semi-style": ["error", "last"],
+    "semi": ["error", "always"],
     "no-confusing-arrow": "error",
     "no-constant-condition": "error",
-    "arrow-parens": [
-      "error",
-      "always"
-    ],
-    "quotes": [
-      "error",
-      "single"
-    ],
-    "@typescript-eslint/no-floating-promises": [
-      "error"
-    ]
+    "arrow-parens": ["error", "always"],
+    "quotes": ["error", "single"],
+    "@typescript-eslint/no-floating-promises": ["error"]
   }
 }

@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import path from 'path';
 import fs from 'fs';
+import { DateTime } from 'luxon';
 
 const getInputPath = (year: number | string, day: number | string) =>
   path.join(__dirname, `../input/Y${year}/Day${day}.txt`);
@@ -13,12 +14,23 @@ export interface Solution<A, B> {
   answers: [A, B];
 }
 
+enum TestResult {
+  NoInput,
+  Success,
+  Error,
+}
+
 const verify = (
   year: string,
   day: string,
   sol: Solution<number, number>,
-): boolean => {
-  const input = fs.readFileSync(getInputPath(year, day)).toString();
+): TestResult => {
+  let input = '';
+  try {
+    input = fs.readFileSync(getInputPath(year, day)).toString();
+  } catch {
+    return TestResult.NoInput;
+  }
 
   const part1 = sol.part1(input.slice());
   const part2 = sol.part2(input.slice());
@@ -37,7 +49,7 @@ const verify = (
     correct = false;
   }
 
-  return correct;
+  return correct ? TestResult.Success : TestResult.Error;
 };
 
 const argv = process.argv.slice(2);
@@ -59,16 +71,20 @@ for (let i = 0; i < argv.length; i++) {
 
 if (options['--test-all']) {
   const dirs = fs.readdirSync(__dirname, { withFileTypes: true });
+  const done = new Map<string, boolean[]>();
+
   for (const dir of dirs) {
     if (dir.isDirectory()) {
       const year = dir.name.match(/Y(\d+)/);
 
       if (!year || !year[1]) continue;
 
-      let yearDone = true;
+      const allDays = new Array(25).fill(0).map(() => false);
+
       const files = fs.readdirSync(path.join(__dirname, dir.name), {
         withFileTypes: true,
       });
+
       for (const file of files) {
         if (path.extname(file.name) == '.ts') {
           const filePath = path.join(__dirname, dir.name, file.name);
@@ -78,14 +94,31 @@ if (options['--test-all']) {
 
           const solution: Solution<number, number> = require(filePath).default;
           const correct = verify(year[1], day[1], solution);
-          yearDone &&= correct;
+          allDays[+day[1] - 1] = correct == TestResult.Success;
         }
       }
 
-      if (yearDone) {
-        console.log(`Year ${year[1]}: all done!`);
+      done.set(year[1], allDays);
+    }
+  }
+
+  for (const [year, days] of done.entries()) {
+    console.log('┌────────────┐');
+    console.log(`│    ${year}    │`);
+    console.log('├─────┬──────┤');
+    console.log('│ Day │ Done │');
+    for (let i = 0; i < 25; i++) {
+      const now = DateTime.now().setZone('America/New_York', {});
+      const then = DateTime.fromISO(
+        `${year}-12-${i + 1 > 9 ? i + 1 : '0' + (i + 1).toString()}T00:00`,
+      ).setZone('America/New_York', { keepLocalTime: true });
+      if (then.toSeconds() <= now.toSeconds()) {
+        console.log(
+          `│  ${i < 9 ? ' ' : ''}${i + 1} │ ${days[i] ? '' : ''}    │`,
+        );
       }
     }
+    console.log('└─────┴──────┘');
   }
 } else {
   if (params.length < 2) {
@@ -103,8 +136,11 @@ if (options['--test-all']) {
     __dirname,
     `Y${year}/Day${day}.ts`,
   )).default;
-  const correct = verify(year, day, solution);
-  if (correct) {
+  const result = verify(year, day, solution);
+
+  if (result == TestResult.NoInput) {
+    console.log('Could not find input file.');
+  } else if (result == TestResult.Success) {
     console.log('All done!');
   }
 }
