@@ -92,6 +92,6 @@ mod tests {
     fn test_part_2() {
         let (year, day) = get_year_day(std::file!());
         let input = get_input_contents(year, day).unwrap();
-        assert_eq!(part_2(input), 2145);
+        assert_eq!(part_2(input), 545729);
     }
 }
