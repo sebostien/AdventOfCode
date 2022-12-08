@@ -18,7 +18,7 @@ fn part_1(input: String) -> usize {
     let mut score = 0;
 
     for line in input.trim().lines() {
-        let mut cs = line.trim().split(" ");
+        let mut cs = line.trim().split(' ');
 
         let a = to_score(cs.next().unwrap());
         let x = to_score(cs.next().unwrap());
@@ -37,7 +37,7 @@ fn part_2(input: String) -> usize {
     let mut score = 0;
 
     for line in input.trim().lines() {
-        let mut cs = line.trim().split(" ");
+        let mut cs = line.trim().split(' ');
 
         let a = to_score(cs.next().unwrap());
         let x = to_score(cs.next().unwrap());

@@ -4,7 +4,7 @@ fn part_1(input: String) -> usize {
     let mut max = 0;
     let mut current = 0;
     for line in lines {
-        if line.len() == 0 {
+        if line.is_empty() {
             max = max.max(current);
             current = 0;
         } else {
@@ -22,7 +22,7 @@ fn part_2(input: String) -> usize {
     let mut max = vec![];
     let mut current = 0;
     for line in lines {
-        if line.len() == 0 {
+        if line.is_empty() {
             max.push(current);
             current = 0;
         } else {

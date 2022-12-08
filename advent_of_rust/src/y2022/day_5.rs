@@ -8,8 +8,8 @@ struct Move {
 fn parse_moves(input: &str) -> Vec<Move> {
     let mut moves = vec![];
 
-    for row in input.trim().split("\n") {
-        let nums = row.trim().split(" ").collect::<Vec<_>>();
+    for row in input.trim().lines() {
+        let nums = row.trim().split(' ').collect::<Vec<_>>();
         moves.push(Move {
             from: nums[3].parse().unwrap(),
             to: nums[5].parse().unwrap(),

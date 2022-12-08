@@ -2,10 +2,10 @@ type Range = (i32, i32);
 
 fn parse_row(row: &str) -> (Range, Range) {
     let mut pairs = row.split(',');
-    let mut a = pairs.next().unwrap().split("-");
-    let mut b = pairs.next().unwrap().split("-");
+    let mut a = pairs.next().unwrap().split('-');
+    let mut b = pairs.next().unwrap().split('-');
 
-    return (
+    (
         (
             a.next().unwrap().parse().unwrap(),
             a.next().unwrap().parse().unwrap(),
@@ -14,7 +14,7 @@ fn parse_row(row: &str) -> (Range, Range) {
             b.next().unwrap().parse().unwrap(),
             b.next().unwrap().parse().unwrap(),
         ),
-    );
+    )
 }
 
 fn contained(a: Range, b: Range) -> bool {

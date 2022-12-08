@@ -10,7 +10,7 @@ fn run(input: std::str::Lines) -> FS {
     fs.insert("/".to_string(), 0);
 
     for line in input {
-        let mut s = line.trim().split(" ");
+        let mut s = line.trim().split(' ');
 
         match s.next().unwrap() {
             "$" => match s.next().unwrap() {
@@ -26,9 +26,7 @@ fn run(input: std::str::Lines) -> FS {
             },
             "dir" => {
                 let pp = format!("{}/{}/", pwd.join("/"), s.next().unwrap()).replace("//", "/");
-                if !fs.contains_key(&pp) {
-                    fs.insert(pp, 0);
-                }
+                fs.entry(pp).or_insert(0);
             }
             x => {
                 let size: usize = x.parse().unwrap();
