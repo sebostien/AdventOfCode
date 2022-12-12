@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 #[derive(Debug, Clone)]
 struct Monkey {
     items: Vec<isize>,
@@ -5,6 +7,46 @@ struct Monkey {
     test: isize,
     if_true: usize,
     if_false: usize,
+}
+
+impl FromStr for Monkey {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let xs = s
+            .trim()
+            .split('\n')
+            .skip(1)
+            .map(|r| r.split(' ').collect())
+            .collect::<Vec<Vec<_>>>();
+
+        let ol = xs[1][xs[1].len() - 3].parse();
+        let or = xs[1][xs[1].len() - 1].parse();
+
+        let items = xs[0]
+            .iter()
+            .skip(4)
+            .map(|x| {
+                if x.ends_with(',') {
+                    x[0..x.len() - 1].parse().unwrap()
+                } else {
+                    x.parse().unwrap()
+                }
+            })
+            .collect();
+
+        Ok(Monkey {
+            items,
+            operation: (
+                if let Ok(x) = ol { Some(x) } else { None },
+                xs[1][xs[1].len() - 2].chars().next().unwrap(),
+                if let Ok(x) = or { Some(x) } else { None },
+            ),
+            test: xs[2].last().unwrap().parse().unwrap(),
+            if_true: xs[3].last().unwrap().parse().unwrap(),
+            if_false: xs[4].last().unwrap().parse().unwrap(),
+        })
+    }
 }
 
 fn run(mut ms: Vec<Monkey>, rounds: isize, div: isize, common_divisor: isize) -> usize {
@@ -48,54 +90,26 @@ fn run(mut ms: Vec<Monkey>, rounds: isize, div: isize, common_divisor: isize) ->
     inspections[inspections.len() - 1] * inspections[inspections.len() - 2]
 }
 
-fn parse(input: &str) -> (Vec<Monkey>, isize) {
-    let mut ms = vec![];
+fn parse(input: &str) -> Result<(Vec<Monkey>, isize), String> {
+    let mut ms: Vec<Monkey> = vec![];
     let mut divisor = 1;
-    for m in input.trim().split("\n\n") {
-        let xs = m
-            .trim()
-            .split('\n')
-            .map(|r| r.split(' ').collect())
-            .collect::<Vec<Vec<_>>>();
-
-        let ol = xs[2][xs[2].len() - 3].parse();
-        let or = xs[2][xs[2].len() - 1].parse();
-
-        ms.push(Monkey {
-            items: xs[1]
-                .iter()
-                .skip(4)
-                .map(|x| {
-                    if x.ends_with(",") {
-                        x[0..x.len() - 1].parse().unwrap()
-                    } else {
-                        x.parse().unwrap()
-                    }
-                })
-                .collect(),
-            operation: (
-                if ol.is_err() { None } else { Some(ol.unwrap()) },
-                xs[2][xs[2].len() - 2].chars().next().unwrap(),
-                if or.is_err() { None } else { Some(or.unwrap()) },
-            ),
-            test: xs[3].last().unwrap().parse().unwrap(),
-            if_true: xs[4].last().unwrap().parse().unwrap(),
-            if_false: xs[5].last().unwrap().parse().unwrap(),
-        });
-        divisor *= ms.last().unwrap().test;
+    for row in input.trim().split("\n\n") {
+        let m: Monkey = row.parse()?;
+        divisor *= m.test;
+        ms.push(m);
     }
 
-    (ms, divisor)
+    Ok((ms, divisor))
 }
 
-fn part_1(input: String) -> usize {
-    let (ms, d) = parse(&input);
-    run(ms, 20, 3, d)
+fn part_1(input: String) -> Result<usize, String> {
+    let (ms, d) = parse(&input)?;
+    Ok(run(ms, 20, 3, d))
 }
 
-fn part_2(input: String) -> usize {
-    let (ms, d) = parse(&input);
-    run(ms, 10000, 1, d)
+fn part_2(input: String) -> Result<usize, String> {
+    let (ms, d) = parse(&input)?;
+    Ok(run(ms, 10000, 1, d))
 }
 
 #[cfg(test)]
@@ -108,13 +122,25 @@ mod tests {
     fn test_part_1() {
         let (year, day) = get_year_day(std::file!());
         let input = get_input_contents(year, day).unwrap();
-        assert_eq!(part_1(input), 100345);
+        let p1 = part_1(input);
+        if let Ok(res) = p1 {
+            assert_eq!(res, 100345);
+        } else {
+            println!("Parse Error \n{:?}", p1.unwrap_err());
+            assert!(false);
+        }
     }
 
     #[test]
     fn test_part_2() {
         let (year, day) = get_year_day(std::file!());
         let input = get_input_contents(year, day).unwrap();
-        assert_eq!(part_2(input), 28537348205);
+        let p2 = part_2(input);
+        if let Ok(res) = p2 {
+            assert_eq!(res, 28537348205);
+        } else {
+            println!("Parse Error \n{:?}", p2.unwrap_err());
+            assert!(false);
+        }
     }
 }
