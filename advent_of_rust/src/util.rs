@@ -1,9 +1,6 @@
 use std::path::Path;
-use std::sync::Once;
 
 use reqwest::header::COOKIE;
-
-static ENV_INIT: Once = Once::new();
 
 #[derive(Debug)]
 pub enum GetInputContentsError {
@@ -68,6 +65,9 @@ fn donwload_file(
     file: String,
     cookie: String,
 ) -> Result<String, Box<dyn std::error::Error>> {
+
+    println!("Downloading file: {}", url);
+
     let client = reqwest::blocking::Client::new();
 
     let resp = client
@@ -93,40 +93,3 @@ pub fn get_year_day(file: &str) -> (u32, u32) {
     }
 }
 
-pub fn base_2_to_10<N: From<i32>>(num: &str) -> N {
-    let mut x = 0;
-    for (i, c) in num.chars().rev().enumerate() {
-        if c == '1' {
-            x += 2_i32.pow(i as u32);
-        }
-    }
-
-    x.into()
-}
-
-pub fn base_2_to_10_slice<N: From<i32>>(num: &[char]) -> N {
-    let mut x = 0;
-    for (i, c) in num.iter().rev().enumerate() {
-        if *c == '1' {
-            x += 2_i32.pow(i as u32);
-        }
-    }
-
-    x.into()
-}
-
-#[test]
-fn test() {
-    let x = base_2_to_10::<i32>("00000001");
-    assert_eq!(x, 1);
-    let x = base_2_to_10::<i32>("010");
-    assert_eq!(x, 2);
-    let x = base_2_to_10::<i32>("011");
-    assert_eq!(x, 3);
-    let x = base_2_to_10::<i32>("100");
-    assert_eq!(x, 4);
-    let x = base_2_to_10::<i32>("111");
-    assert_eq!(x, 7);
-    let x = base_2_to_10::<i32>("101100110101001010111100101011");
-    assert_eq!(x, 752135979);
-}

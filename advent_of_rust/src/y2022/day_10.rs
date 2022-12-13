@@ -1,4 +1,26 @@
-fn run_1(input: &Vec<(&str, Option<&str>)>) -> isize {
+use crate::Solution;
+
+pub fn get_solution() -> Solution<usize, String> {
+    Solution {
+        date: (2022, 10),
+        part_1: Box::new(part_1),
+        part_2: Box::new(part_2),
+        answer: (
+            16020,
+            vec![
+                "####  ##  #### #  # ####  ##  #    ###  ".to_string(),
+                "#    #  #    # #  #    # #  # #    #  # ".to_string(),
+                "###  #      #  #  #   #  #  # #    #  # ".to_string(),
+                "#    #     #   #  #  #   #### #    ###  ".to_string(),
+                "#    #  # #    #  # #    #  # #    # #  ".to_string(),
+                "####  ##  ####  ##  #### #  # #### #  # ".to_string(),
+            ]
+            .join("\n"),
+        ),
+    }
+}
+
+fn run_1(input: &Vec<(&str, Option<&str>)>) -> usize {
     let mut x: isize = 1;
     let mut c = 1;
     let mut i = 0;
@@ -29,7 +51,7 @@ fn run_1(input: &Vec<(&str, Option<&str>)>) -> isize {
         c += 1;
     }
 
-    sum
+    sum as usize
 }
 
 fn parse_input(input: &str) -> Vec<(&str, Option<&str>)> {
@@ -43,9 +65,9 @@ fn parse_input(input: &str) -> Vec<(&str, Option<&str>)> {
         .collect()
 }
 
-fn part_1(input: String) -> isize {
-    let moves = parse_input(&input);
-    run_1(&moves)
+fn part_1(input: &str) -> Result<usize, String> {
+    let moves = parse_input(input);
+    Ok(run_1(&moves))
 }
 
 fn run_2(input: &Vec<(&str, Option<&str>)>) -> Vec<String> {
@@ -85,44 +107,7 @@ fn run_2(input: &Vec<(&str, Option<&str>)>) -> Vec<String> {
     s
 }
 
-fn part_2(input: String) -> Vec<String> {
-    let moves = parse_input(&input);
-    run_2(&moves)
-}
-
-#[cfg(test)]
-mod tests {
-
-    use super::*;
-    use crate::util::{get_input_contents, get_year_day};
-
-    #[test]
-    fn test_part_1() {
-        let (year, day) = get_year_day(std::file!());
-        let input = get_input_contents(year, day).unwrap();
-        assert_eq!(part_1(input), 16020);
-    }
-
-    #[test]
-    fn test_part_2() {
-        let (year, day) = get_year_day(std::file!());
-        let input = get_input_contents(year, day).unwrap();
-
-        let x = part_2(input.clone());
-        println!("{:?}", x);
-
-        let answer = vec![
-            "####  ##  #### #  # ####  ##  #    ###  ",
-            "#    #  #    # #  #    # #  # #    #  # ",
-            "###  #      #  #  #   #  #  # #    #  # ",
-            "#    #     #   #  #  #   #### #    ###  ",
-            "#    #  # #    #  # #    #  # #    # #  ",
-            "####  ##  ####  ##  #### #  # #### #  # ",
-        ]
-        .iter()
-        .map(|s| s.to_string())
-        .collect::<Vec<_>>();
-
-        assert_eq!(part_2(input), answer);
-    }
+fn part_2(input: &str) -> Result<String, String> {
+    let moves = parse_input(input);
+    Ok(run_2(&moves).join("\n"))
 }

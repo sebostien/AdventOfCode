@@ -1,5 +1,16 @@
 use std::str::FromStr;
 
+use crate::Solution;
+
+pub fn get_solution() -> Solution<usize, usize> {
+    Solution {
+        date: (2022, 11),
+        part_1: Box::new(part_1),
+        part_2: Box::new(part_2),
+        answer: (100345, 28537348205),
+    }
+}
+
 #[derive(Debug, Clone)]
 struct Monkey {
     items: Vec<isize>,
@@ -102,45 +113,12 @@ fn parse(input: &str) -> Result<(Vec<Monkey>, isize), String> {
     Ok((ms, divisor))
 }
 
-fn part_1(input: String) -> Result<usize, String> {
-    let (ms, d) = parse(&input)?;
+fn part_1(input: &str) -> Result<usize, String> {
+    let (ms, d) = parse(input)?;
     Ok(run(ms, 20, 3, d))
 }
 
-fn part_2(input: String) -> Result<usize, String> {
-    let (ms, d) = parse(&input)?;
+fn part_2(input: &str) -> Result<usize, String> {
+    let (ms, d) = parse(input)?;
     Ok(run(ms, 10000, 1, d))
-}
-
-#[cfg(test)]
-mod tests {
-
-    use super::*;
-    use crate::util::{get_input_contents, get_year_day};
-
-    #[test]
-    fn test_part_1() {
-        let (year, day) = get_year_day(std::file!());
-        let input = get_input_contents(year, day).unwrap();
-        let p1 = part_1(input);
-        if let Ok(res) = p1 {
-            assert_eq!(res, 100345);
-        } else {
-            println!("Parse Error \n{:?}", p1.unwrap_err());
-            assert!(false);
-        }
-    }
-
-    #[test]
-    fn test_part_2() {
-        let (year, day) = get_year_day(std::file!());
-        let input = get_input_contents(year, day).unwrap();
-        let p2 = part_2(input);
-        if let Ok(res) = p2 {
-            assert_eq!(res, 28537348205);
-        } else {
-            println!("Parse Error \n{:?}", p2.unwrap_err());
-            assert!(false);
-        }
-    }
 }

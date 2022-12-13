@@ -1,27 +1,31 @@
-enum RPS {
-    Rock,
-    Paper,
-    Scissors,
-}
+use crate::Solution;
 
-fn to_score(c: &str) -> usize {
-    match c {
-        "A" | "X" => 1,
-        "B" | "Y" => 2,
-        "C" | "Z" => 3,
-
-        _ => panic!("Unkown char {}", c),
+pub fn get_solution() -> Solution<usize, usize> {
+    Solution {
+        date: (2022, 2),
+        part_1: Box::new(part_1),
+        part_2: Box::new(part_2),
+        answer: (8392, 10116),
     }
 }
 
-fn part_1(input: String) -> usize {
+fn to_score(c: &str) -> Result<usize, String> {
+    Ok(match c {
+        "A" | "X" => 1,
+        "B" | "Y" => 2,
+        "C" | "Z" => 3,
+        _ => Err(format!("Unkown char {}", c))?,
+    })
+}
+
+fn part_1(input: &str) -> Result<usize, String> {
     let mut score = 0;
 
     for line in input.trim().lines() {
         let mut cs = line.trim().split(' ');
 
-        let a = to_score(cs.next().unwrap());
-        let x = to_score(cs.next().unwrap());
+        let a = to_score(cs.next().unwrap())?;
+        let x = to_score(cs.next().unwrap())?;
         score += x;
         if a == x {
             score += 3;
@@ -30,47 +34,26 @@ fn part_1(input: String) -> usize {
         }
     }
 
-    score
+    Ok(score)
 }
 
-fn part_2(input: String) -> usize {
+fn part_2(input: &str) -> Result<usize, String> {
     let mut score = 0;
 
     for line in input.trim().lines() {
         let mut cs = line.trim().split(' ');
 
-        let a = to_score(cs.next().unwrap());
-        let x = to_score(cs.next().unwrap());
+        let a = to_score(cs.next().unwrap())?;
+        let x = to_score(cs.next().unwrap())?;
         score += (x - 1) * 3;
 
         match x {
             1 => score += if a - 1 == 0 { 3 } else { a - 1 },
             2 => score += a,
             3 => score += if a + 1 == 4 { 1 } else { a + 1 },
-            _ => panic!("Unkown score: {}", x),
+            _ => Err(format!("Unkown score: {}", x))?,
         }
     }
 
-    score
-}
-
-#[cfg(test)]
-mod tests {
-
-    use super::*;
-    use crate::util::{get_input_contents, get_year_day};
-
-    #[test]
-    fn test_part_1() {
-        let (year, day) = get_year_day(std::file!());
-        let input = get_input_contents(year, day).unwrap();
-        assert_eq!(part_1(input), 8392);
-    }
-
-    #[test]
-    fn test_part_2() {
-        let (year, day) = get_year_day(std::file!());
-        let input = get_input_contents(year, day).unwrap();
-        assert_eq!(part_2(input), 10116);
-    }
+    Ok(score)
 }

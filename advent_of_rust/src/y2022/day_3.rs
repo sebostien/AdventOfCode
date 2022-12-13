@@ -1,3 +1,14 @@
+use crate::Solution;
+
+pub fn get_solution() -> Solution<usize, usize> {
+    Solution {
+        date: (2022, 3),
+        part_1: Box::new(part_1),
+        part_2: Box::new(part_2),
+        answer: (7878, 2760),
+    }
+}
+
 fn priority(c: char) -> usize {
     if c.is_uppercase() {
         c as usize - 38
@@ -6,7 +17,7 @@ fn priority(c: char) -> usize {
     }
 }
 
-fn part_1(input: String) -> usize {
+fn part_1(input: &str) -> Result<usize, String> {
     let mut sum = 0;
 
     for line in input.trim().lines() {
@@ -21,10 +32,10 @@ fn part_1(input: String) -> usize {
         }
     }
 
-    sum
+    Ok(sum)
 }
 
-fn part_2(input: String) -> usize {
+fn part_2(input: &str) -> Result<usize, String> {
     let mut sum = 0;
 
     let sacks = input
@@ -42,26 +53,5 @@ fn part_2(input: String) -> usize {
         }
     }
 
-    sum
-}
-
-#[cfg(test)]
-mod tests {
-
-    use super::*;
-    use crate::util::{get_input_contents, get_year_day};
-
-    #[test]
-    fn test_part_1() {
-        let (year, day) = get_year_day(std::file!());
-        let input = get_input_contents(year, day).unwrap();
-        assert_eq!(part_1(input), 7878);
-    }
-
-    #[test]
-    fn test_part_2() {
-        let (year, day) = get_year_day(std::file!());
-        let input = get_input_contents(year, day).unwrap();
-        assert_eq!(part_2(input), 2760);
-    }
+    Ok(sum)
 }

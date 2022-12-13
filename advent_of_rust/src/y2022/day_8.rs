@@ -1,3 +1,14 @@
+use crate::Solution;
+
+pub fn get_solution() -> Solution<usize, usize> {
+    Solution {
+        date: (2022, 8),
+        part_1: Box::new(part_1),
+        part_2: Box::new(part_2),
+        answer: (1779, 172224),
+    }
+}
+
 fn visible(input: &mut Vec<Vec<i8>>) -> usize {
     let mut out = vec![0; input.len()]
         .iter()
@@ -47,7 +58,7 @@ fn visible(input: &mut Vec<Vec<i8>>) -> usize {
     sum
 }
 
-fn part_1(input: String) -> usize {
+fn part_1(input: &str) -> Result<usize, String> {
     let mut map = input
         .trim()
         .lines()
@@ -59,7 +70,7 @@ fn part_1(input: String) -> usize {
         })
         .collect::<Vec<_>>();
 
-    visible(&mut map)
+    Ok(visible(&mut map))
 }
 
 fn scenic(map: &[Vec<i8>], row: usize, col: usize) -> usize {
@@ -96,7 +107,7 @@ fn scenic(map: &[Vec<i8>], row: usize, col: usize) -> usize {
     a.iter().product()
 }
 
-fn part_2(input: String) -> usize {
+fn part_2(input: &str) -> Result<usize, String> {
     let map = input
         .trim()
         .lines()
@@ -115,26 +126,5 @@ fn part_2(input: String) -> usize {
         }
     }
 
-    sum
-}
-
-#[cfg(test)]
-mod tests {
-
-    use super::*;
-    use crate::util::{get_input_contents, get_year_day};
-
-    #[test]
-    fn test_part_1() {
-        let (year, day) = get_year_day(std::file!());
-        let input = get_input_contents(year, day).unwrap();
-        assert_eq!(part_1(input), 1779);
-    }
-
-    #[test]
-    fn test_part_2() {
-        let (year, day) = get_year_day(std::file!());
-        let input = get_input_contents(year, day).unwrap();
-        assert_eq!(part_2(input), 172224);
-    }
+    Ok(sum)
 }

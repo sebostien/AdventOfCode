@@ -1,3 +1,13 @@
+use crate::Solution;
+
+pub fn get_solution() -> Solution<usize, usize> {
+    Solution {
+        date: (2022, 4),
+        part_1: Box::new(part_1),
+        part_2: Box::new(part_2),
+        answer: (526, 886),
+    }
+}
 type Range = (i32, i32);
 
 fn parse_row(row: &str) -> (Range, Range) {
@@ -21,7 +31,7 @@ fn contained(a: Range, b: Range) -> bool {
     a.0 <= b.0 && a.1 >= b.1
 }
 
-fn part_1(input: String) -> usize {
+fn part_1(input: &str) -> Result<usize, String> {
     let mut sum = 0;
 
     for line in input.trim().lines() {
@@ -32,14 +42,14 @@ fn part_1(input: String) -> usize {
         }
     }
 
-    sum
+    Ok(sum)
 }
 
 fn intersects(a: Range, b: Range) -> bool {
     b.0 <= a.1 && b.1 >= a.0
 }
 
-fn part_2(input: String) -> usize {
+fn part_2(input: &str) -> Result<usize, String> {
     let mut sum = 0;
 
     for line in input.trim().lines() {
@@ -50,26 +60,5 @@ fn part_2(input: String) -> usize {
         }
     }
 
-    sum
-}
-
-#[cfg(test)]
-mod tests {
-
-    use super::*;
-    use crate::util::{get_input_contents, get_year_day};
-
-    #[test]
-    fn test_part_1() {
-        let (year, day) = get_year_day(std::file!());
-        let input = get_input_contents(year, day).unwrap();
-        assert_eq!(part_1(input), 526);
-    }
-
-    #[test]
-    fn test_part_2() {
-        let (year, day) = get_year_day(std::file!());
-        let input = get_input_contents(year, day).unwrap();
-        assert_eq!(part_2(input), 886);
-    }
+    Ok(sum)
 }

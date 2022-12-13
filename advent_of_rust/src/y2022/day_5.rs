@@ -1,3 +1,14 @@
+use crate::Solution;
+
+pub fn get_solution() -> Solution<String, String> {
+    Solution {
+        date: (2022, 5),
+        part_1: Box::new(part_1),
+        part_2: Box::new(part_2),
+        answer: ("SHQWSRBDL".to_string(), "CDTQZHBRS".to_string()),
+    }
+}
+
 #[derive(Clone, Debug)]
 struct Move {
     from: usize,
@@ -44,7 +55,7 @@ fn parse_stacks(input: &str) -> Vec<Vec<char>> {
         .collect()
 }
 
-fn part_1(input: String) -> String {
+fn part_1(input: &str) -> Result<String, String> {
     let mut input1 = input.split("\n\n");
     let mut stacks = parse_stacks(input1.next().unwrap());
     let moves = parse_moves(input1.next().unwrap());
@@ -60,10 +71,10 @@ fn part_1(input: String) -> String {
         stacks[m.to - 1].append(&mut rest);
     }
 
-    stacks.iter().map(|r| r.last().unwrap()).collect::<String>()
+    Ok(stacks.iter().map(|r| r.last().unwrap()).collect::<String>())
 }
 
-fn part_2(input: String) -> String {
+fn part_2(input: &str) -> Result<String, String> {
     let mut input1 = input.split("\n\n");
     let mut stacks = parse_stacks(input1.next().unwrap());
     let moves = parse_moves(input1.next().unwrap());
@@ -74,26 +85,5 @@ fn part_2(input: String) -> String {
         stacks[m.to - 1].append(&mut rest);
     }
 
-    stacks.iter().map(|r| r.last().unwrap()).collect::<String>()
-}
-
-#[cfg(test)]
-mod tests {
-
-    use super::*;
-    use crate::util::{get_input_contents, get_year_day};
-
-    #[test]
-    fn test_part_1() {
-        let (year, day) = get_year_day(std::file!());
-        let input = get_input_contents(year, day).unwrap();
-        assert_eq!(part_1(input), "SHQWSRBDL");
-    }
-
-    #[test]
-    fn test_part_2() {
-        let (year, day) = get_year_day(std::file!());
-        let input = get_input_contents(year, day).unwrap();
-        assert_eq!(part_2(input), "CDTQZHBRS");
-    }
+    Ok(stacks.iter().map(|r| r.last().unwrap()).collect::<String>())
 }

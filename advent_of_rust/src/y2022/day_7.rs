@@ -1,3 +1,14 @@
+use crate::Solution;
+
+pub fn get_solution() -> Solution<usize, usize> {
+    Solution {
+        date: (2022, 7),
+        part_1: Box::new(part_1),
+        part_2: Box::new(part_2),
+        answer: (1423358, 545729),
+    }
+}
+
 use std::collections::{HashMap, HashSet};
 
 type FS = HashMap<String, usize>;
@@ -44,7 +55,7 @@ fn run(input: std::str::Lines) -> FS {
     fs
 }
 
-fn part_1(input: String) -> usize {
+fn part_1(input: &str) -> Result<usize, String> {
     let fs = run(input.trim().lines());
 
     let mut sum = 0;
@@ -54,10 +65,10 @@ fn part_1(input: String) -> usize {
         }
     }
 
-    sum
+    Ok(sum)
 }
 
-fn part_2(input: String) -> usize {
+fn part_2(input: &str) -> Result<usize, String> {
     let fs = run(input.trim().lines());
 
     let total = fs.get("/").unwrap();
@@ -70,26 +81,6 @@ fn part_2(input: String) -> usize {
         }
     }
 
-    *closest
+    Ok(*closest)
 }
 
-#[cfg(test)]
-mod tests {
-
-    use super::*;
-    use crate::util::{get_input_contents, get_year_day};
-
-    #[test]
-    fn test_part_1() {
-        let (year, day) = get_year_day(std::file!());
-        let input = get_input_contents(year, day).unwrap();
-        assert_eq!(part_1(input), 1423358);
-    }
-
-    #[test]
-    fn test_part_2() {
-        let (year, day) = get_year_day(std::file!());
-        let input = get_input_contents(year, day).unwrap();
-        assert_eq!(part_2(input), 545729);
-    }
-}

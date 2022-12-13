@@ -1,4 +1,14 @@
+use crate::Solution;
 use std::collections::HashSet;
+
+pub fn get_solution() -> Solution<usize, usize> {
+    Solution {
+        date: (2022, 9),
+        part_1: Box::new(part_1),
+        part_2: Box::new(part_2),
+        answer: (6332, 2511),
+    }
+}
 
 enum Dir {
     Up,
@@ -50,7 +60,7 @@ fn tail_from_moves(moves: &[Move]) -> Vec<(isize, isize)> {
     tail_visit
 }
 
-fn parse_input(input: String) -> Vec<Move> {
+fn parse_input(input: &str) -> Vec<Move> {
     input
         .trim()
         .lines()
@@ -64,11 +74,11 @@ fn parse_input(input: String) -> Vec<Move> {
         .collect()
 }
 
-fn part_1(input: String) -> usize {
+fn part_1(input: &str) -> Result<usize, String> {
     let moves = parse_input(input);
     let all = tail_from_moves(&moves);
     let a: HashSet<(isize, isize)> = HashSet::from_iter(all);
-    a.len()
+    Ok(a.len())
 }
 
 fn tail_from_tail(moves: &[(isize, isize)]) -> Vec<(isize, isize)> {
@@ -86,7 +96,7 @@ fn tail_from_tail(moves: &[(isize, isize)]) -> Vec<(isize, isize)> {
     new_moves
 }
 
-fn part_2(input: String) -> usize {
+fn part_2(input: &str) -> Result<usize, String> {
     let moves = parse_input(input);
     let mut curr = tail_from_moves(&moves);
     for _ in 0..8 {
@@ -94,26 +104,5 @@ fn part_2(input: String) -> usize {
     }
 
     let a: HashSet<(isize, isize)> = HashSet::from_iter(curr);
-    a.len()
-}
-
-#[cfg(test)]
-mod tests {
-
-    use super::*;
-    use crate::util::{get_input_contents, get_year_day};
-
-    #[test]
-    fn test_part_1() {
-        let (year, day) = get_year_day(std::file!());
-        let input = get_input_contents(year, day).unwrap();
-        assert_eq!(part_1(input), 6332);
-    }
-
-    #[test]
-    fn test_part_2() {
-        let (year, day) = get_year_day(std::file!());
-        let input = get_input_contents(year, day).unwrap();
-        assert_eq!(part_2(input), 2511);
-    }
+    Ok(a.len())
 }
