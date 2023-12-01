@@ -2,7 +2,7 @@ use std::path::Path;
 
 use reqwest::header::COOKIE;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum GetInputContentsError {
     CouldNotDownload,
     CouldNotReadLocal,
@@ -15,7 +15,7 @@ pub fn get_input_contents(year: u32, day: u32) -> Result<String, GetInputContent
 
     let input_file_name = format!("../input/Y{}/Day{}.txt", year, day);
 
-    if let Err(e) = std::fs::create_dir_all(&format!("../input/Y{}", year)) {
+    if let Err(e) = std::fs::create_dir_all(format!("../input/Y{}", year)) {
         match e.kind() {
             std::io::ErrorKind::AlreadyExists => (),
             _ => return Err(CouldNotCreateDir),
@@ -33,7 +33,7 @@ pub fn get_input_contents(year: u32, day: u32) -> Result<String, GetInputContent
             None => Err(CookieNotFound),
             Some(cookie_string) => {
                 let resp = donwload_file(
-                    format!("https://adventofcode.com/{}/day/{}/input", year, day),
+                    format!("https://adventofcode.com/{year}/day/{day}/input",),
                     input_file_name,
                     cookie_string,
                 );
@@ -65,7 +65,6 @@ fn donwload_file(
     file: String,
     cookie: String,
 ) -> Result<String, Box<dyn std::error::Error>> {
-
     println!("Downloading file: {}", url);
 
     let client = reqwest::blocking::Client::new();
@@ -92,4 +91,3 @@ pub fn get_year_day(file: &str) -> (u32, u32) {
         panic!("File is not named correctly: {}", file);
     }
 }
-

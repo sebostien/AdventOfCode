@@ -26,7 +26,7 @@ fn run_test(year: u32, day: u32) {
             for sol in sols {
                 let (y, d) = sol.get_date();
                 if y == year && d == day {
-                    let (correct, _) = test_year_day(y, d, sol);
+                    let (correct, _) = test_year_day(y, d, sol.as_ref());
                     if correct {
                         println!("All done!");
                     }
