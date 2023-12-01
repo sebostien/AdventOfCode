@@ -32,7 +32,7 @@ fn parse_moves(input: &str) -> Vec<Move> {
 }
 
 fn parse_stacks(input: &str) -> Vec<Vec<char>> {
-    let mut stacks = vec![0; 9].iter().map(|_| vec![]).collect::<Vec<_>>();
+    let mut stacks = vec![vec![]; 9];
 
     for line in input.lines() {
         let l = line.chars().collect::<Vec<_>>();
@@ -51,11 +51,11 @@ fn parse_stacks(input: &str) -> Vec<Vec<char>> {
 
     stacks
         .iter()
-        .map(|r| r.iter().map(|c| c.to_owned()).rev().collect())
+        .map(|r| r.iter().copied().rev().collect())
         .collect()
 }
 
-fn part_1(input: &str) -> Result<String, String> {
+fn part_1(input: &str) -> anyhow::Result<String> {
     let mut input1 = input.split("\n\n");
     let mut stacks = parse_stacks(input1.next().unwrap());
     let moves = parse_moves(input1.next().unwrap());
@@ -66,7 +66,7 @@ fn part_1(input: &str) -> Result<String, String> {
             .split_off(len - m.amount)
             .iter()
             .rev()
-            .map(|c| c.to_owned())
+            .copied()
             .collect();
         stacks[m.to - 1].append(&mut rest);
     }
@@ -74,7 +74,7 @@ fn part_1(input: &str) -> Result<String, String> {
     Ok(stacks.iter().map(|r| r.last().unwrap()).collect::<String>())
 }
 
-fn part_2(input: &str) -> Result<String, String> {
+fn part_2(input: &str) -> anyhow::Result<String> {
     let mut input1 = input.split("\n\n");
     let mut stacks = parse_stacks(input1.next().unwrap());
     let moves = parse_moves(input1.next().unwrap());

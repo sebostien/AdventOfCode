@@ -1,3 +1,5 @@
+use anyhow::anyhow;
+
 use crate::Solution;
 
 pub fn get_solution() -> Solution<usize, usize> {
@@ -9,16 +11,16 @@ pub fn get_solution() -> Solution<usize, usize> {
     }
 }
 
-fn to_score(c: &str) -> Result<usize, String> {
+fn to_score(c: &str) -> anyhow::Result<usize> {
     Ok(match c {
         "A" | "X" => 1,
         "B" | "Y" => 2,
         "C" | "Z" => 3,
-        _ => Err(format!("Unkown char {}", c))?,
+        _ => Err(anyhow!("Unkown char {c}"))?,
     })
 }
 
-fn part_1(input: &str) -> Result<usize, String> {
+fn part_1(input: &str) -> anyhow::Result<usize> {
     let mut score = 0;
 
     for line in input.trim().lines() {
@@ -37,7 +39,7 @@ fn part_1(input: &str) -> Result<usize, String> {
     Ok(score)
 }
 
-fn part_2(input: &str) -> Result<usize, String> {
+fn part_2(input: &str) -> anyhow::Result<usize> {
     let mut score = 0;
 
     for line in input.trim().lines() {
@@ -51,7 +53,7 @@ fn part_2(input: &str) -> Result<usize, String> {
             1 => score += if a - 1 == 0 { 3 } else { a - 1 },
             2 => score += a,
             3 => score += if a + 1 == 4 { 1 } else { a + 1 },
-            _ => Err(format!("Unkown score: {}", x))?,
+            _ => Err(anyhow!("Unkown score: {}", x))?,
         }
     }
 

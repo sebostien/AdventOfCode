@@ -50,14 +50,14 @@
 
 use std::fmt::Display;
 
-use util::{get_input_contents, GetInputContentsError};
+use util::get_input_contents;
 
 pub mod util;
 mod y2021;
 mod y2022;
 mod y2023;
 
-type SolFn<T> = Box<dyn Fn(&str) -> Result<T, String>>;
+type SolFn<T> = Box<dyn Fn(&str) -> anyhow::Result<T>>;
 
 pub struct Solution<A: Eq + Display, B: Eq + Display> {
     pub date: (u32, u32),
@@ -68,8 +68,8 @@ pub struct Solution<A: Eq + Display, B: Eq + Display> {
 
 pub trait IsCorrect {
     fn get_date(&self) -> (u32, u32);
-    fn part_1(&self, input: &str) -> Result<(bool, String), String>;
-    fn part_2(&self, input: &str) -> Result<(bool, String), String>;
+    fn part_1(&self, input: &str) -> anyhow::Result<(bool, String)>;
+    fn part_2(&self, input: &str) -> anyhow::Result<(bool, String)>;
 }
 
 impl<A: Eq + Display, B: Eq + Display> IsCorrect for Solution<A, B> {
@@ -77,24 +77,20 @@ impl<A: Eq + Display, B: Eq + Display> IsCorrect for Solution<A, B> {
         self.date
     }
 
-    fn part_1(&self, input: &str) -> Result<(bool, String), String> {
-        match (self.part_1)(input) {
-            Ok(ans) => Ok((
-                ans == self.answer.0,
-                format!("Answer:\n{ans}\nCorrect:\n{}", self.answer.0),
-            )),
-            Err(err) => Err(err),
-        }
+    fn part_1(&self, input: &str) -> anyhow::Result<(bool, String)> {
+        let ans = (self.part_1)(input)?;
+        Ok((
+            ans == self.answer.0,
+            format!("Answer:\n{ans}\nCorrect:\n{}", self.answer.0),
+        ))
     }
 
-    fn part_2(&self, input: &str) -> Result<(bool, String), String> {
-        match (self.part_2)(input) {
-            Ok(ans) => Ok((
-                ans == self.answer.1,
-                format!("Answer:\n{ans}\nCorrect:\n{}", self.answer.1),
-            )),
-            Err(err) => Err(err),
-        }
+    fn part_2(&self, input: &str) -> anyhow::Result<(bool, String)> {
+        let ans = (self.part_2)(input)?;
+        Ok((
+            ans == self.answer.1,
+            format!("Answer:\n{ans}\nCorrect:\n{}", self.answer.1),
+        ))
     }
 }
 
@@ -110,20 +106,7 @@ pub fn get_all_years() -> Vec<(u32, Vec<Box<dyn IsCorrect>>)> {
 pub fn test_year_day(year: u32, day: u32, solution: &dyn IsCorrect) -> (bool, String) {
     let input = match get_input_contents(year, day) {
         Ok(input) => input,
-        Err(err) => match err {
-            GetInputContentsError::CouldNotDownload => {
-                return (false, "Could not download input file!".to_string());
-            }
-            GetInputContentsError::CouldNotReadLocal => {
-                return (false, "Could not read local input file!".to_string());
-            }
-            GetInputContentsError::CookieNotFound => {
-                return (false, "Could not find cookie for AOC!".to_string());
-            }
-            GetInputContentsError::CouldNotCreateDir => {
-                return (false, "Could not create directory for input!".to_string());
-            }
-        },
+        Err(err) => return (false, err.to_string()),
     };
 
     let mut is_correct = true;

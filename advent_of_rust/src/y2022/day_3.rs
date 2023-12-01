@@ -17,7 +17,7 @@ fn priority(c: char) -> usize {
     }
 }
 
-fn part_1(input: &str) -> Result<usize, String> {
+fn part_1(input: &str) -> anyhow::Result<usize> {
     let mut sum = 0;
 
     for line in input.trim().lines() {
@@ -35,7 +35,7 @@ fn part_1(input: &str) -> Result<usize, String> {
     Ok(sum)
 }
 
-fn part_2(input: &str) -> Result<usize, String> {
+fn part_2(input: &str) -> anyhow::Result<usize> {
     let mut sum = 0;
 
     let sacks = input
@@ -45,7 +45,7 @@ fn part_2(input: &str) -> Result<usize, String> {
         .collect::<Vec<_>>();
 
     for (i, sack) in sacks.iter().enumerate().step_by(3) {
-        for c in sack.iter() {
+        for c in sack {
             if sacks[i + 1].contains(c) && sacks[i + 2].contains(c) {
                 sum += priority(*c);
                 break;

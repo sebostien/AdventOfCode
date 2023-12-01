@@ -5,7 +5,7 @@ pub fn get_solution() -> Solution<usize, usize> {
         date: (2022, 7),
         part_1: Box::new(part_1),
         part_2: Box::new(part_2),
-        answer: (1423358, 545729),
+        answer: (1_423_358, 545_729),
     }
 }
 
@@ -13,7 +13,7 @@ use std::collections::{HashMap, HashSet};
 
 type FS = HashMap<String, usize>;
 
-fn run(input: std::str::Lines) -> FS {
+fn run(input: std::str::Lines<'_>) -> FS {
     let mut pwd = vec!["/"];
     let mut fs = HashMap::new();
     let mut listed = HashSet::new();
@@ -33,7 +33,7 @@ fn run(input: std::str::Lines) -> FS {
                     x => pwd.push(x),
                 },
                 "ls" => {}
-                _ => panic!("Unkown command: {}", line),
+                _ => panic!("Unkown command: {line}"),
             },
             "dir" => {
                 let pp = format!("{}/{}/", pwd.join("/"), s.next().unwrap()).replace("//", "/");
@@ -42,7 +42,7 @@ fn run(input: std::str::Lines) -> FS {
             x => {
                 let size: usize = x.parse().unwrap();
                 let p = pwd.join("/").replace("//", "/") + "/";
-                for (n1, s1) in fs.iter_mut() {
+                for (n1, s1) in &mut fs {
                     if p.starts_with(n1) && !listed.contains(n1) {
                         *s1 += size;
                     }
@@ -55,12 +55,12 @@ fn run(input: std::str::Lines) -> FS {
     fs
 }
 
-fn part_1(input: &str) -> Result<usize, String> {
+fn part_1(input: &str) -> anyhow::Result<usize> {
     let fs = run(input.trim().lines());
 
     let mut sum = 0;
-    for (_, s) in fs.iter() {
-        if s < &100000 {
+    for s in fs.values() {
+        if s < &100_000 {
             sum += s;
         }
     }
@@ -68,19 +68,18 @@ fn part_1(input: &str) -> Result<usize, String> {
     Ok(sum)
 }
 
-fn part_2(input: &str) -> Result<usize, String> {
+fn part_2(input: &str) -> anyhow::Result<usize> {
     let fs = run(input.trim().lines());
 
     let total = fs.get("/").unwrap();
-    let diff = 70000000 - total;
+    let diff = 70_000_000 - total;
     let mut closest = total;
 
-    for (_, s) in fs.iter() {
-        if diff + s > 30000000 && diff + s < diff + closest {
+    for s in fs.values() {
+        if diff + s > 30_000_000 && diff + s < diff + closest {
             closest = s;
         }
     }
 
     Ok(*closest)
 }
-

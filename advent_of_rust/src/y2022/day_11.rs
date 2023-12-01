@@ -7,7 +7,7 @@ pub fn get_solution() -> Solution<usize, usize> {
         date: (2022, 11),
         part_1: Box::new(part_1),
         part_2: Box::new(part_2),
-        answer: (100345, 28537348205),
+        answer: (100_345, 28_537_348_205),
     }
 }
 
@@ -21,7 +21,7 @@ struct Monkey {
 }
 
 impl FromStr for Monkey {
-    type Err = String;
+    type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let xs = s
@@ -31,8 +31,8 @@ impl FromStr for Monkey {
             .map(|r| r.split(' ').collect())
             .collect::<Vec<Vec<_>>>();
 
-        let ol = xs[1][xs[1].len() - 3].parse();
-        let or = xs[1][xs[1].len() - 1].parse();
+        let ol = xs[1][xs[1].len() - 3].parse().ok();
+        let or = xs[1][xs[1].len() - 1].parse().ok();
 
         let items = xs[0]
             .iter()
@@ -46,16 +46,12 @@ impl FromStr for Monkey {
             })
             .collect();
 
-        Ok(Monkey {
+        Ok(Self {
             items,
-            operation: (
-                if let Ok(x) = ol { Some(x) } else { None },
-                xs[1][xs[1].len() - 2].chars().next().unwrap(),
-                if let Ok(x) = or { Some(x) } else { None },
-            ),
-            test: xs[2].last().unwrap().parse().unwrap(),
-            if_true: xs[3].last().unwrap().parse().unwrap(),
-            if_false: xs[4].last().unwrap().parse().unwrap(),
+            operation: (ol, xs[1][xs[1].len() - 2].chars().next().unwrap(), or),
+            test: xs[2].last().unwrap().parse()?,
+            if_true: xs[3].last().unwrap().parse()?,
+            if_false: xs[4].last().unwrap().parse()?,
         })
     }
 }
@@ -97,11 +93,11 @@ fn run(mut ms: Vec<Monkey>, rounds: isize, div: isize, common_divisor: isize) ->
         }
     }
 
-    inspections.sort();
+    inspections.sort_unstable();
     inspections[inspections.len() - 1] * inspections[inspections.len() - 2]
 }
 
-fn parse(input: &str) -> Result<(Vec<Monkey>, isize), String> {
+fn parse(input: &str) -> anyhow::Result<(Vec<Monkey>, isize)> {
     let mut ms: Vec<Monkey> = vec![];
     let mut divisor = 1;
     for row in input.trim().split("\n\n") {
@@ -113,12 +109,12 @@ fn parse(input: &str) -> Result<(Vec<Monkey>, isize), String> {
     Ok((ms, divisor))
 }
 
-fn part_1(input: &str) -> Result<usize, String> {
+fn part_1(input: &str) -> anyhow::Result<usize> {
     let (ms, d) = parse(input)?;
     Ok(run(ms, 20, 3, d))
 }
 
-fn part_2(input: &str) -> Result<usize, String> {
+fn part_2(input: &str) -> anyhow::Result<usize> {
     let (ms, d) = parse(input)?;
     Ok(run(ms, 10000, 1, d))
 }

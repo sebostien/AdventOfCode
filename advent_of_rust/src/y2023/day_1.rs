@@ -9,7 +9,7 @@ pub fn get_solution() -> Solution<u32, u32> {
     }
 }
 
-fn part_1(input: &str) -> Result<u32, String> {
+fn part_1(input: &str) -> anyhow::Result<u32> {
     Ok(input
         .lines()
         .map(|line| {
@@ -38,7 +38,7 @@ fn to_digit(s: &str) -> Option<(usize, u32)> {
     None
 }
 
-fn part_2(input: &str) -> Result<u32, String> {
+fn part_2(input: &str) -> anyhow::Result<u32> {
     let sum = input
         .lines()
         .map(|line| {

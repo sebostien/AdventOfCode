@@ -1,5 +1,7 @@
 use std::{collections::HashMap, str::FromStr};
 
+use anyhow::anyhow;
+
 use crate::Solution;
 
 pub fn get_solution() -> Solution<u16, u16> {
@@ -21,7 +23,7 @@ struct Map {
 }
 
 impl FromStr for Map {
-    type Err = String;
+    type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut start = None;
@@ -43,7 +45,7 @@ impl FromStr for Map {
                             end = Some(pos);
                             ALPHA.find('z').unwrap()
                         }
-                        _ => Err(format!("Unkown char in input: {}", c))?,
+                        _ => Err(anyhow!("Unkown char in input: {c}"))?,
                     };
                     map.insert(pos, h as u16);
                 }
@@ -51,14 +53,14 @@ impl FromStr for Map {
         }
 
         if start.is_none() {
-            Err("Could not find start!")?;
+            Err(anyhow!("Could not find start!"))?;
         }
 
         if end.is_none() {
-            Err("Could not find end!")?;
+            Err(anyhow!("Could not find end!"))?;
         }
 
-        Ok(Map {
+        Ok(Self {
             m: map,
             start: start.unwrap(),
             end: end.unwrap(),
@@ -74,7 +76,7 @@ fn square_height(steps: u16, square: u16, reset: bool) -> u16 {
     }
 }
 
-fn flood_fill(start: (i8, i8), map: &Map, reset: bool) -> Result<u16, String> {
+fn flood_fill(start: (i8, i8), map: &Map, reset: bool) -> anyhow::Result<u16> {
     let mut to_visit = HashMap::new();
     to_visit.insert(start, 0);
     let mut visited: HashMap<(i8, i8), u16> = HashMap::new();
@@ -93,7 +95,7 @@ fn flood_fill(start: (i8, i8), map: &Map, reset: bool) -> Result<u16, String> {
         }
 
         let ch = map.m.get(&pos).unwrap();
-        for (dx, dy) in [(-1, 0), (1, 0), (0, -1), (0, 1)].iter() {
+        for (dx, dy) in &[(-1, 0), (1, 0), (0, -1), (0, 1)] {
             let new_pos = (pos.0 + dx, pos.1 + dy);
             if let Some(&height) = map.m.get(&new_pos) {
                 let new_steps = square_height(steps + 1, height, reset);
@@ -108,19 +110,18 @@ fn flood_fill(start: (i8, i8), map: &Map, reset: bool) -> Result<u16, String> {
         }
     }
 
-    if let Some(&steps) = visited.get(&map.end) {
-        Ok(steps)
-    } else {
-        Err("Could not reach end!".to_string())
-    }
+    visited
+        .get(&map.end)
+        .copied()
+        .ok_or(anyhow!("Could not reach end!"))
 }
 
-fn part_1(input: &str) -> Result<u16, String> {
+fn part_1(input: &str) -> anyhow::Result<u16> {
     let map: Map = input.parse()?;
     flood_fill(map.start, &map, false)
 }
 
-fn part_2(input: &str) -> Result<u16, String> {
+fn part_2(input: &str) -> anyhow::Result<u16> {
     let map: Map = input.parse()?;
     flood_fill(map.start, &map, true)
 }

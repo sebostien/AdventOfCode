@@ -10,32 +10,26 @@ pub fn get_solution() -> Solution<usize, usize> {
 }
 type Range = (i32, i32);
 
-fn parse_row(row: &str) -> (Range, Range) {
+fn parse_row(row: &str) -> anyhow::Result<(Range, Range)> {
     let mut pairs = row.split(',');
     let mut a = pairs.next().unwrap().split('-');
     let mut b = pairs.next().unwrap().split('-');
 
-    (
-        (
-            a.next().unwrap().parse().unwrap(),
-            a.next().unwrap().parse().unwrap(),
-        ),
-        (
-            b.next().unwrap().parse().unwrap(),
-            b.next().unwrap().parse().unwrap(),
-        ),
-    )
+    Ok((
+        (a.next().unwrap().parse()?, a.next().unwrap().parse()?),
+        (b.next().unwrap().parse()?, b.next().unwrap().parse()?),
+    ))
 }
 
 fn contained(a: Range, b: Range) -> bool {
     a.0 <= b.0 && a.1 >= b.1
 }
 
-fn part_1(input: &str) -> Result<usize, String> {
+fn part_1(input: &str) -> anyhow::Result<usize> {
     let mut sum = 0;
 
     for line in input.trim().lines() {
-        let (a, b) = parse_row(line);
+        let (a, b) = parse_row(line)?;
 
         if contained(a, b) || contained(b, a) {
             sum += 1;
@@ -49,11 +43,11 @@ fn intersects(a: Range, b: Range) -> bool {
     b.0 <= a.1 && b.1 >= a.0
 }
 
-fn part_2(input: &str) -> Result<usize, String> {
+fn part_2(input: &str) -> anyhow::Result<usize> {
     let mut sum = 0;
 
     for line in input.trim().lines() {
-        let (a, b) = parse_row(line);
+        let (a, b) = parse_row(line)?;
 
         if intersects(a, b) {
             sum += 1;

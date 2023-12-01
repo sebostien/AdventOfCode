@@ -1,5 +1,7 @@
 use std::cmp::Ordering;
 
+use anyhow::anyhow;
+
 use crate::Solution;
 
 pub fn get_solution() -> Solution<usize, usize> {
@@ -18,16 +20,16 @@ enum List {
 }
 
 impl std::str::FromStr for List {
-    type Err = String;
+    type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let mut root: Vec<List> = vec![];
+        let mut root: Vec<Self> = vec![];
         let chars = s.chars().collect::<Vec<_>>();
 
         let mut i = 0;
         while i < chars.len() {
-            match chars[i] {
-                '[' => {
+            match chars.get(i) {
+                Some('[') => {
                     let mut depth = 0;
                     let mut j = 0;
                     for (k, &c) in chars.iter().skip(i).enumerate() {
@@ -44,54 +46,55 @@ impl std::str::FromStr for List {
                     root.push(s[i + 1..i + j].parse()?);
                     i += j + 1;
                 }
-                ']' => {
-                    return Err("Mismatched ']'".to_string());
+                Some(']') => {
+                    return Err(anyhow!("Mismatched ']'"));
                 }
-                ',' => {}
-                _ => {
+                Some(',') => {}
+                Some(_) => {
                     let mut done = false;
                     if s.len() >= i + 2 {
                         if let Ok(n) = s[i..i + 2].parse() {
-                            root.push(List::I(n));
+                            root.push(Self::I(n));
                             i += 1;
-                            done = true
+                            done = true;
                         }
                     }
-                    if let Ok(n) = s[i..i + 1].parse() {
-                        root.push(List::I(n));
-                        done = true
+                    if let Ok(n) = s[i..=i].parse() {
+                        root.push(Self::I(n));
+                        done = true;
                     }
                     if !done {
-                        return Err(format!("Expected a number at position {}\n{}", i, s));
+                        return Err(anyhow!("Expected a number at position {i}\n{s}"));
                     }
                 }
+                None => unreachable!(),
             }
 
             i += 1;
         }
 
-        Ok(List::L(root))
+        Ok(Self::L(root))
     }
 }
 
 impl PartialOrd for List {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        self.cmp(other).into()
+        Some(self.cmp(other))
     }
 }
 
 impl Ord for List {
     fn cmp(&self, other: &Self) -> Ordering {
         match (self, other) {
-            (List::I(l), List::I(r)) => l.cmp(r),
-            (List::I(_), List::L(_)) => List::L(vec![self.clone()]).cmp(other),
-            (List::L(_), List::I(_)) => self.cmp(&List::L(vec![other.clone()])),
-            (List::L(l), List::L(r)) => {
+            (Self::I(l), Self::I(r)) => l.cmp(r),
+            (Self::I(_), Self::L(_)) => Self::L(vec![self.clone()]).cmp(other),
+            (Self::L(_), Self::I(_)) => self.cmp(&Self::L(vec![other.clone()])),
+            (Self::L(l), Self::L(r)) => {
                 for i in 0..l.len().min(r.len()) {
                     let c = l[i].cmp(&r[i]);
                     match c {
                         Ordering::Less | Ordering::Greater => return c,
-                        _ => {}
+                        Ordering::Equal => {}
                     }
                 }
 
@@ -104,21 +107,21 @@ impl Ord for List {
 struct Pairs(Vec<(List, List)>);
 
 impl std::str::FromStr for Pairs {
-    type Err = String;
+    type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut pairs = vec![];
 
         for lines in s.trim().split("\n\n") {
             let mut p = lines.split('\n');
-            let a = p.next().unwrap().parse()?;
-            let b = p.next().unwrap().parse()?;
+            let left = p.next().unwrap().parse()?;
+            let right = p.next().unwrap().parse()?;
 
-            match (a, b) {
-                (List::L(l), List::L(r)) => {
-                    pairs.push((l[0].clone(), r[0].clone()));
+            match (left, right) {
+                (List::L(left), List::L(right)) => {
+                    pairs.push((left[0].clone(), right[0].clone()));
                 }
-                _ => unreachable!(),
+                _ => Err(anyhow!("Unexpected None"))?,
             }
         }
 
@@ -126,7 +129,7 @@ impl std::str::FromStr for Pairs {
     }
 }
 
-fn part_1(input: &str) -> Result<usize, String> {
+fn part_1(input: &str) -> anyhow::Result<usize> {
     let pairs = input.parse::<Pairs>()?;
     let mut sum = 0;
     for (i, row) in pairs.0.iter().enumerate() {
@@ -138,12 +141,12 @@ fn part_1(input: &str) -> Result<usize, String> {
     Ok(sum)
 }
 
-fn part_2(input: &str) -> Result<usize, String> {
+fn part_2(input: &str) -> anyhow::Result<usize> {
     let packets = input
         .replace("\n\n", "\n")
         .lines()
-        .map(|line| line.parse().unwrap())
-        .collect::<Vec<List>>();
+        .map(str::parse)
+        .collect::<Result<Vec<List>, _>>()?;
 
     let d2: List = "[[2]]".parse()?;
     let d6: List = "[[6]]".parse()?;
@@ -151,7 +154,7 @@ fn part_2(input: &str) -> Result<usize, String> {
     let mut a = 1;
     let mut b = 2;
 
-    for p in packets.iter() {
+    for p in packets {
         if p.cmp(&d2) == Ordering::Less {
             a += 1;
             b += 1;

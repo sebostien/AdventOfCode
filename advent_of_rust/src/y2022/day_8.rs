@@ -5,7 +5,7 @@ pub fn get_solution() -> Solution<usize, usize> {
         date: (2022, 8),
         part_1: Box::new(part_1),
         part_2: Box::new(part_2),
-        answer: (1779, 172224),
+        answer: (1779, 172_224),
     }
 }
 
@@ -50,22 +50,22 @@ fn visible(input: &mut Vec<Vec<i8>>) -> usize {
     }
 
     let mut sum = 0;
-    for row in out.iter() {
-        for c in row.iter() {
+    for row in &out {
+        for c in row {
             sum += c;
         }
     }
     sum
 }
 
-fn part_1(input: &str) -> Result<usize, String> {
+fn part_1(input: &str) -> anyhow::Result<usize> {
     let mut map = input
         .trim()
         .lines()
         .map(|row| {
             row.trim()
                 .chars()
-                .map(|c| format!("{}", c).parse::<i8>().unwrap())
+                .map(|c| format!("{c}").parse::<i8>().unwrap())
                 .collect::<Vec<_>>()
         })
         .collect::<Vec<_>>();
@@ -107,14 +107,14 @@ fn scenic(map: &[Vec<i8>], row: usize, col: usize) -> usize {
     a.iter().product()
 }
 
-fn part_2(input: &str) -> Result<usize, String> {
+fn part_2(input: &str) -> anyhow::Result<usize> {
     let map = input
         .trim()
         .lines()
         .map(|row| {
             row.trim()
                 .chars()
-                .map(|c| format!("{}", c).parse::<i8>().unwrap())
+                .map(|c| format!("{c}").parse::<i8>().unwrap())
                 .collect::<Vec<_>>()
         })
         .collect::<Vec<_>>();

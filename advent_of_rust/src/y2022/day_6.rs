@@ -1,3 +1,5 @@
+use anyhow::anyhow;
+
 use crate::Solution;
 
 pub fn get_solution() -> Solution<usize, usize> {
@@ -18,22 +20,22 @@ fn unique(s: &str) -> bool {
     true
 }
 
-fn part_1(input: &str) -> Result<usize, String> {
+fn part_1(input: &str) -> anyhow::Result<usize> {
     for i in 0..input.len() - 4 {
         if unique(&input[i..i + 4]) {
             return Ok(i + 4);
         }
     }
 
-    Err("No solution found".to_string())
+    Err(anyhow!("No solution found"))
 }
 
-fn part_2(input: &str) -> Result<usize, String> {
+fn part_2(input: &str) -> anyhow::Result<usize> {
     for i in 0..input.len() - 14 {
         if unique(&input[i..i + 14]) {
             return Ok(i + 14);
         }
     }
 
-    Err("No solution found".to_string())
+    Err(anyhow!("No solution found"))
 }
