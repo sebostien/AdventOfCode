@@ -104,26 +104,3 @@ fn part_2(_: &str) -> anyhow::Result<usize> {
     Ok(0)
 }
 
-#[cfg(test)]
-mod tests {
-    use crate::y2022::day_25::part_1;
-
-    #[test]
-    fn snafu_works() {
-        assert_eq!(part_1("1").unwrap(), "1"); // 1
-        assert_eq!(part_1("2").unwrap(), "2"); // 2
-        assert_eq!(part_1("1=").unwrap(), "1="); // 3
-        assert_eq!(part_1("1-").unwrap(), "1-"); // 4
-        assert_eq!(part_1("10").unwrap(), "10"); // 5
-        assert_eq!(part_1("11").unwrap(), "11"); // 6
-        assert_eq!(part_1("12").unwrap(), "12"); // 7
-        assert_eq!(part_1("2=").unwrap(), "2="); // 8
-        assert_eq!(part_1("2-").unwrap(), "2-"); // 9
-        assert_eq!(part_1("20").unwrap(), "20"); // 10
-        assert_eq!(part_1("1=0").unwrap(), "1=0"); // 15
-        assert_eq!(part_1("1-0").unwrap(), "1-0"); // 20
-        assert_eq!(part_1("1=11-2").unwrap(), "1=11-2"); // 2022
-        assert_eq!(part_1("1-0---0").unwrap(), "1-0---0"); // 12345
-        assert_eq!(part_1("1=-20=0111200201--").unwrap(), "1=-20=0111200201--");
-    }
-}

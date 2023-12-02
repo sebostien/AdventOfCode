@@ -57,7 +57,7 @@ impl Display for Elves {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut rows = vec![vec!['.'; 20]; 20];
 
-        for &(x, y) in self.elves.iter() {
+        for &(x, y) in &self.elves {
             rows[(y + 5) as usize][(x + 5) as usize] = '#';
         }
 
@@ -65,7 +65,7 @@ impl Display for Elves {
             writeln!(
                 f,
                 "{}",
-                row.iter().map(|x| x.to_string()).collect::<String>()
+                row.iter().map(ToString::to_string).collect::<String>()
             )?;
         }
 
@@ -95,7 +95,7 @@ impl FromStr for Elves {
             }
         }
 
-        Ok(Elves { elves, r })
+        Ok(Self { r, elves })
     }
 }
 
@@ -135,11 +135,11 @@ impl Elves {
         let new_positions = self
             .elves
             .iter()
-            .cloned()
+            .copied()
             .map(|row| (row, self.get_next_pos(row.0, row.1)))
             .collect::<Vec<_>>();
 
-        for (_, pos) in new_positions.iter() {
+        for (_, pos) in &new_positions {
             if let Some(v) = num_moves.get_mut(&pos) {
                 *v += 1;
             } else {
@@ -150,7 +150,7 @@ impl Elves {
         // TODO: Optimization maybe? Calculate range after instead
         let mut new_ranges = Ranges::new();
 
-        for (prev, new) in new_positions.iter() {
+        for (prev, new) in &new_positions {
             if num_moves.get(&new) == Some(&1) {
                 new_ranges.update(new.0, new.1);
                 self.elves.remove(prev);
@@ -173,7 +173,7 @@ fn part_1(input: &str) -> anyhow::Result<usize> {
     Ok(r.area() - elves.elves.len())
 }
 
-fn part_2(input: &str) -> anyhow::Result<usize> {
+fn part_2(_input: &str) -> anyhow::Result<usize> {
     Err(anyhow!("Not done!"))
 }
 

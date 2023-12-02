@@ -48,14 +48,17 @@
     clippy::cast_possible_wrap
 )]
 
-use std::fmt::Display;
-
-use util::get_input_contents;
-
 pub mod util;
+
+mod include;
 mod y2021;
 mod y2022;
 mod y2023;
+
+use std::fmt::Display;
+use util::get_input_contents;
+pub use include::get_all_years;
+
 
 type SolFn<T> = Box<dyn Fn(&str) -> anyhow::Result<T>>;
 
@@ -92,14 +95,6 @@ impl<A: Eq + Display, B: Eq + Display> IsCorrect for Solution<A, B> {
             format!("Answer:\n{ans}\nCorrect:\n{}", self.answer.1),
         ))
     }
-}
-
-#[must_use]
-pub fn get_all_years() -> Vec<(u32, Vec<Box<dyn IsCorrect>>)> {
-    vec![
-        (2022, crate::y2022::get_solutions()),
-        (2023, crate::y2023::get_solutions()),
-    ]
 }
 
 #[must_use]
@@ -147,24 +142,34 @@ pub fn test_year_day(year: u32, day: u32, solution: &dyn IsCorrect) -> (bool, St
 
 #[cfg(test)]
 mod tests {
-    use crate::{get_all_years, test_year_day};
+    use crate::include::get_all_years;
+    use crate::test_year_day;
 
     #[test]
     fn test_all() {
+        let mut any_wrong = false;
         let years = get_all_years();
 
-        for (y1, sols) in years {
+        for (y1, mut sols) in years {
             let mut tests = vec![];
+            sols.sort_by_key(|x| x.get_date().1);
 
             for sol in sols {
                 let (year, day) = sol.get_date();
                 let (correct, date) = test_year_day(year, day, sol.as_ref());
-                assert!(correct);
-                tests.push(date);
+                any_wrong = any_wrong || !correct;
+                tests.push(format!(
+                    "{date:<7} = {}",
+                    if correct { "Done" } else { "Wrong" }
+                ));
             }
 
             println!("-- {y1} ------------------");
             println!("{}", tests.join("\n"));
+        }
+
+        if any_wrong {
+            panic!("At least one solution is incorrect!");
         }
     }
 }

@@ -1,4 +1,4 @@
-use advent_of_rust::{get_all_years, test_year_day};
+use advent_of_rust::test_year_day;
 
 fn help() {
     println!(
@@ -18,7 +18,7 @@ To test all solutions:
 }
 
 fn run_test(year: u32, day: u32) {
-    let years = get_all_years();
+    let years = advent_of_rust::get_all_years();
 
     let mut found = false;
     for (y, sols) in years {
