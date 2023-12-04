@@ -145,19 +145,3 @@ fn part_2(input: &str) -> anyhow::Result<usize> {
     Ok(sum)
 }
 
-#[test]
-fn heeee() {
-    let input = r#"
-467..114..
-...*......
-..35..633.
-......#...
-617*......
-.....+.58.
-..592.....
-......755.
-...$.*....
-.664.598.."#
-        .trim();
-    assert_eq!(111 + 111 + 1 + 1, part_2(input.trim()).unwrap());
-}
