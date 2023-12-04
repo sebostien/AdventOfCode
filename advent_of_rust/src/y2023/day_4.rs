@@ -27,12 +27,7 @@ fn part_1(input: &str) -> anyhow::Result<usize> {
     let input = parse(input);
     let mut sum = 0;
     for (l, r) in input {
-        let a = r
-            .iter()
-            .filter(|x| l.contains(x))
-            .map(|_| ())
-            .collect::<Vec<_>>()
-            .len();
+        let a = r.iter().filter(|x| l.contains(x)).count();
 
         if a > 0 {
             sum += 2usize.pow(a as u32 - 1);
@@ -51,12 +46,7 @@ fn part_2(input: &str) -> anyhow::Result<usize> {
 
     for (i, (l, r)) in input.iter().enumerate() {
         let n = *instances.get(&i).unwrap();
-        let win = r
-            .iter()
-            .filter(|x| l.contains(x))
-            .map(|_| ())
-            .collect::<Vec<_>>()
-            .len();
+        let win = r.iter().filter(|x| l.contains(x)).count();
 
         if win > 0 {
             for j in i + 1..=i + win {
