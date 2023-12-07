@@ -50,14 +50,3 @@ fn part_2(input: &str) -> anyhow::Result<usize> {
     let (times, dists) = parse::<false>(input)?;
     Ok(wins(&times, &dists))
 }
-
-#[test]
-fn day6() {
-    let input = r#"
-Time:      7  15   30
-Distance:  9  40  200
-        "#
-    .trim();
-
-    assert_eq!(46, part_2(input).unwrap());
-}
