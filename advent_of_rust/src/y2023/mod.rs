@@ -8,6 +8,7 @@ mod day_3;
 mod day_5;
 mod day_6;
 mod day_7;
+mod day_8;
 
 pub fn get_solutions() -> Vec<Box<dyn crate::IsCorrect>> {
     vec![
@@ -17,6 +18,7 @@ pub fn get_solutions() -> Vec<Box<dyn crate::IsCorrect>> {
         Box::new(crate::y2023::day_3::get_solution()),
         Box::new(crate::y2023::day_5::get_solution()),
         Box::new(crate::y2023::day_6::get_solution()),
-        Box::new(crate::y2023::day_7::get_solution())
+        Box::new(crate::y2023::day_7::get_solution()),
+        Box::new(crate::y2023::day_8::get_solution())
     ]
 }
