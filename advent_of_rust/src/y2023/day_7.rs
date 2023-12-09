@@ -57,9 +57,8 @@ impl Hand {
                 4 => {
                     if jokers >= 1 {
                         return Five;
-                    } else {
-                        return Four;
                     }
+                    return Four;
                 }
                 3 => three = true,
                 2 => {
@@ -73,10 +72,9 @@ impl Hand {
 
         // WOOOWWWW Oh My
         match (three, pair1, pair2, jokers) {
-            (false, false, false, 5)
-            | (false, false, false, 4)
-            | (false, true, false, 3)
-            | (true, false, false, 2) => Five,
+            (false, false, false, 5 | 4) | (false, true, false, 3) | (true, false, false, 2) => {
+                Five
+            }
             (true, true, false, 0) | (true, false, true, 0) | (false, true, true, 1) => Full,
             (true, false, false, 1) | (false, true, false, 2) | (false, false, false, 3) => Four,
             (true, false, false, 0) | (false, true, false, 1) | (false, false, false, 2) => Three,
