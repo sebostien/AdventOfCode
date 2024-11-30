@@ -84,7 +84,7 @@ fn main() {
 #[must_use]
 pub fn get_all_years() -> Vec<(u32, Vec<Box<dyn crate::IsCorrect>>)> {{
     vec![
-        {}
+        {},
     ]
 }}
 "#,

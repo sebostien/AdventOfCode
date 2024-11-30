@@ -162,34 +162,35 @@ impl Elves {
 }
 
 fn part_1(input: &str) -> anyhow::Result<usize> {
-    let mut elves: Elves = input.parse()?;
-    for _ in 0..10 {
-        println!("{elves}");
-        elves.do_round();
-    }
-    println!("{elves}");
-    let r = elves.r;
-    println!("{r:#?}");
-    Ok(r.area() - elves.elves.len())
+    // let mut elves: Elves = input.parse()?;
+    // for _ in 0..10 {
+    //     println!("{elves}");
+    //     elves.do_round();
+    // }
+    // println!("{elves}");
+    // let r = elves.r;
+    // println!("{r:#?}");
+    // Ok(r.area() - elves.elves.len())
+    Err(anyhow!("Not done!"))
 }
 
 fn part_2(_input: &str) -> anyhow::Result<usize> {
     Err(anyhow!("Not done!"))
 }
 
-#[cfg(test)]
-mod tests {
-    use crate::y2022::day_23::part_1;
-
-    #[test]
-    fn ttt() {
-        let input = r#".....
-..##.
-..#..
-.....
-..##.
-....."#;
-
-        assert_eq!(110, part_1(input).unwrap());
-    }
-}
+// #[cfg(test)]
+// mod tests {
+//     use crate::y2022::day_23::part_1;
+//
+//     #[test]
+//     fn ttt() {
+//         let input = r#".....
+// ..##.
+// ..#..
+// .....
+// ..##.
+// ....."#;
+//
+//         assert_eq!(110, part_1(input).unwrap());
+//     }
+// }

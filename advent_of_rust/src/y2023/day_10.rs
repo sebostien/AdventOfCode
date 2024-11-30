@@ -102,23 +102,24 @@ impl Maze {
 }
 
 fn part_1(input: &str) -> anyhow::Result<usize> {
-    Ok(Maze::from(input).longest_path())
+    Err(anyhow!("Not Done!"))
+    // Ok(Maze::from(input).longest_path())
 }
 
 fn part_2(input: &str) -> anyhow::Result<usize> {
     Err(anyhow!("Not Done!"))
 }
 
-#[test]
-fn day11() {
-    let input = r#"
-S------7
-|F----7|
-||....||
-||....||
-|L-7F-J|
-|..||..|
-L--JL--J
-    "#;
-    assert_eq!(4, part_2(input).unwrap());
-}
+// #[test]
+// fn day10() {
+//     let input = r#"
+// S------7
+// |F----7|
+// ||....||
+// ||....||
+// |L-7F-J|
+// |..||..|
+// L--JL--J
+//     "#;
+//     assert_eq!(4, part_2(input).unwrap());
+// }

@@ -1,5 +1,7 @@
 use std::{ops::Range, str::FromStr};
 
+use anyhow::anyhow;
+
 pub fn get_solution() -> crate::Solution<usize, usize> {
     crate::Solution {
         date: (2023, 5),
@@ -126,17 +128,19 @@ fn lowest_location(maps: &[Map], mut start_seeds: impl Iterator<Item = usize>) -
 }
 
 fn part_1(input: &str) -> anyhow::Result<usize> {
-    let (seeds, maps) = parse(input)?;
-    Ok(lowest_location(&maps, seeds.into_iter()))
+    Err(anyhow!("Not Done!"))
+    // let (seeds, maps) = parse(input)?;
+    // Ok(lowest_location(&maps, seeds.into_iter()))
 }
 
 fn part_2(input: &str) -> anyhow::Result<usize> {
-    let (seeds, maps) = parse(input)?;
-
-    let seeds = seeds
-        .chunks(2)
-        .map(|xs| xs[0]..xs[0] + xs[1])
-        .flat_map(IntoIterator::into_iter);
-
-    Ok(lowest_location(&maps, seeds))
+    Err(anyhow!("Not Done!"))
+    // let (seeds, maps) = parse(input)?;
+    //
+    // let seeds = seeds
+    //     .chunks(2)
+    //     .map(|xs| xs[0]..xs[0] + xs[1])
+    //     .flat_map(IntoIterator::into_iter);
+    //
+    // Ok(lowest_location(&maps, seeds))
 }

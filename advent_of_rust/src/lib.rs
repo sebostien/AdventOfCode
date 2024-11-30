@@ -54,11 +54,12 @@ mod include;
 mod y2021;
 mod y2022;
 mod y2023;
+mod y2024;
 
+use chrono::{Datelike, TimeZone};
+pub use include::get_all_years;
 use std::fmt::Display;
 use util::get_input_contents;
-pub use include::get_all_years;
-
 
 type SolFn<T> = Box<dyn Fn(&str) -> anyhow::Result<T>>;
 
@@ -99,6 +100,15 @@ impl<A: Eq + Display, B: Eq + Display> IsCorrect for Solution<A, B> {
 
 #[must_use]
 pub fn test_year_day(year: u32, day: u32, solution: &dyn IsCorrect) -> (bool, String) {
+    let date = &chrono_tz::US::Eastern.from_utc_datetime(&chrono::Utc::now().naive_utc());
+    let c_year = date.year() as u32;
+    let c_month = date.month();
+    let c_day = date.day();
+
+    if year > c_year || year == c_year && (c_month < 12 || c_day < day) {
+        return (false, "The day is not released yet".to_string());
+    }
+
     let input = match get_input_contents(year, day) {
         Ok(input) => input,
         Err(err) => return (false, err.to_string()),
