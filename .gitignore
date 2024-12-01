@@ -1,6 +1,5 @@
-**/node_modules/
-**/dist/
-**/target/
-
+target/
 input/
 .env
+src/_include.rs
+src/y*/mod.rs
