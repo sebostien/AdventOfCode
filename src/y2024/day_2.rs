@@ -22,13 +22,8 @@ fn part_1(input: &str) -> anyhow::Result<usize> {
 
         let mut prev = report.next().unwrap();
         for c in report {
-            if c > prev {
-                dec = false;
-            }
-
-            if c < prev {
-                inc = false;
-            }
+            dec &= c > prev;
+            inc &= c < prev;
 
             if !(1..=3).contains(&prev.abs_diff(c)) {
                 continue 'outer;
