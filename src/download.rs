@@ -35,7 +35,8 @@ pub fn get_input_contents(year: usize, day: usize) -> anyhow::Result<String> {
         match load_session_cookie() {
             None => Err(anyhow!("Could not find AOC cookie!")),
             Some(cookie_string) => {
-                let resp = donwload_file(
+                eprintln!("WARNING! Downloading input file. Please make sure this is not ran multiple times!!!");
+                let resp = download_file(
                     &format!("https://adventofcode.com/{year}/day/{day}/input"),
                     &input_file_name,
                     &cookie_string,
@@ -63,7 +64,7 @@ fn load_session_cookie() -> Option<String> {
     }
 }
 
-fn donwload_file(
+fn download_file(
     url: &str,
     file: &str,
     cookie: &str,
